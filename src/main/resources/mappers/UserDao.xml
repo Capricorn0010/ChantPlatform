@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.github.chant.dao.UserDao">
+
+    <resultMap id="userMap" type="com.github.chant.entity.User">
+        <id property="uid" column="uid"/>
+        <result property="username" column="user_name"/>
+        <result property="password" column="pass_word"/>
+        <result property="salt" column="user_salt"/>
+        <collection property="roles" ofType="com.github.chant.entity.Role">
+            <id property="rid" column="rid"/>
+            <result property="name" column="role_name"/>
+            <collection property="permissions" ofType="com.github.chant.entity.Permission">
+                <id property="pid" column="pid"/>
+                <result property="name" column="permission_name"/>
+            </collection>
+        </collection>
+    </resultMap>
+
+    <select id="findByUsername" parameterType="string" resultMap="userMap">
+           SELECT *
+           FROM tb_user u,tb_role r,tb_permission p
+           WHERE u.rid=r.rid
+           AND p.rid=r.rid
+           AND u.user_name=#{username}
+    </select>
+
+</mapper>
